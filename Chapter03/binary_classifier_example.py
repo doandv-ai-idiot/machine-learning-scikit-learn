@@ -11,7 +11,7 @@ X_train, X_test, y_train, y_test = X[:60000], X[60000:], y[:60000], y[60000:]
 y_train_5 = (y_train == '5')  # True for all 5s, False for all other digits.
 y_test_5 = (y_test == '5')
 # Init model
-sgd_clf = SGDClassifier(verbose=1)
+sgd_clf = SGDClassifier(verbose=0)
 sgd_clf.fit(X_train, y_train_5)
 # Eval
 y_pred = sgd_clf.predict(X_test)
@@ -19,14 +19,15 @@ y_pred = sgd_clf.predict(X_test)
 print(classification_report(y_test_5, y_pred))
 # Measure accuracy
 
-skfolds = StratifiedKFold(n_splits=3, random_state=42)
+skfolds = StratifiedKFold(n_splits=3)
 
 for train_index, test_index in skfolds.split(X_train, y_train_5):
     clone_clf = clone(sgd_clf)
-    X_train_folds = X_train[train_index]
-    y_train_folds = y_train_5[train_index]
-    X_test_folds = X_train[test_index]
-    y_test_folds = y_train_5[test_index]
+    X_train_folds = X_train.values[train_index]
+    y_train_folds = y_train_5.values[train_index]
+    X_test_folds = X_train.values[test_index]
+    y_test_folds = y_train_5.values[test_index]
     clone_clf.fit(X_train_folds, y_train_folds)
     y_pred = clone_clf.predict(X_test_folds)
-    n_corrects = sum(y_pred)
+    n_corrects = sum(y_pred == y_test_folds)
+    print(n_corrects / len(y_pred))
