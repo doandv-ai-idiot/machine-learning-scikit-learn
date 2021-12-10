@@ -43,7 +43,7 @@ print(recall_score(y_train_5, y_train_pred))
 print(f1_score(y_train_5, y_train_pred))
 
 # Save model
-model_name = "sgd_clf.sav"
-joblib.dump(sgd_clf, open(model_name, 'wb'))
+model_name = "sgd_clf.pkl"
+# joblib.dump(sgd_clf, open(model_name, 'wb'))
 pickle.dump(sgd_clf, open(model_name, 'wb'))
 print('Save done with model path:{}'.format(model_name))
